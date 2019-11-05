@@ -1,0 +1,40 @@
+﻿<Window x:Class="GradeStatistics.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GradeStatistics"
+        mc:Ignorable="d"
+        Title="成绩统计" Height="450" Width="800" >
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/DataGridStyle.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" Grid.Row="0">
+            <TextBox Width="260" IsReadOnly="True" x:Name="tbFileName"></TextBox>
+            <Button Content="选择文件" Click="BtnFile_Click"></Button>
+            <Button Content="选择文件夹" Click="BtnFolder_Click"></Button>
+        </StackPanel>
+
+        <DataGrid Grid.Row="1" ItemsSource="{Binding}" x:Name="m_dataGrid" Style="{StaticResource ConfigDataGridStyle}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="学号" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Num}" Width="*" />
+                <DataGridTextColumn Header="姓名" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
+                <DataGridTextColumn Header="语文" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Chinese}" Width="*" />
+                <DataGridTextColumn Header="数学" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Math}" Width="*" />
+                <DataGridTextColumn Header="英语" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding English}" Width="*" />
+                <DataGridTextColumn Header="科学" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Science}" Width="*" />
+                <DataGridTextColumn Header="平均" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
+                <DataGridTextColumn Header="总分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Summary}" Width="*" />
+            </DataGrid.Columns>
+        </DataGrid>
+    </Grid>
+</Window>

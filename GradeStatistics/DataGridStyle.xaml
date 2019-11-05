@@ -1,0 +1,113 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:GradeStatistics"
+                    xmlns:converter="clr-namespace:GradeStatistics">
+
+
+    <!-- DataGrid水平方向分割线颜色 -->
+    <SolidColorBrush x:Key="HorizontalGridLinesBrushKey" Color="Transparent" />
+
+    <!-- DataGrid竖直方向分割线颜色 -->
+    <SolidColorBrush x:Key="VerticalGridLinesBrushKey" Color="Transparent" />
+
+    <!-- 系统默认的组件字体 -->
+    <FontFamily x:Key="FontFamilyKey" >Microsoft YaHei</FontFamily>
+
+    <!-- 默认的DataGridRow的样式 -->
+    <Style TargetType="{x:Type DataGridRow}" x:Key="DataGridRowDefaultStyle">
+        <Setter Property="Height" Value="38" />
+        <Setter Property="FontFamily" Value="{StaticResource FontFamilyKey}" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0, 0" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="HorizontalContentAlignment" Value="Left" />
+    </Style>
+
+    <!-- 默认的DataGrid的Cell的样式 -->
+    <Style TargetType="{x:Type DataGridCell}" x:Key="DataGridCellDefaultStyle">
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    </Style>
+    <!-- DataGrid行居中样式 -->
+    <Style TargetType="{x:Type TextBlock}" x:Key="DataGridTextColumnStyle">
+        <Setter Property="FontSize" Value="12" />
+        <Setter Property="Height" Value="40" />
+        <Setter Property="VerticalAlignment" Value="Bottom" />
+        <Setter Property="Padding" Value="0, 12" />
+        <Setter Property="HorizontalAlignment" Value="Center" />
+    </Style>
+
+    <!-- 不允许用户添加删除行的DataGrid的样式 -->
+    <Style TargetType="{x:Type DataGrid}" x:Key="DataGridDefaultStyle">
+        <Setter Property="AutoGenerateColumns" Value="False" />
+        <Setter Property="CanUserAddRows" Value="False" />
+        <Setter Property="CanUserDeleteRows" Value="False" />
+        <Setter Property="CanUserResizeRows" Value="False" />
+        <Setter Property="IsReadOnly" Value="True" />
+        <Setter Property="SelectionMode" Value="Single" />
+        <Setter Property="HorizontalGridLinesBrush" Value="{StaticResource HorizontalGridLinesBrushKey}" />
+        <Setter Property="VerticalGridLinesBrush" Value="{StaticResource VerticalGridLinesBrushKey}" />
+        <Setter Property="RowStyle" Value="{StaticResource DataGridRowDefaultStyle}" />
+        <Setter Property="CellStyle" Value="{StaticResource DataGridCellDefaultStyle}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="BorderBrush" Value="#E6E6E6" />
+        <Setter Property="HeadersVisibility" Value="Column" />
+        <Setter Property="Background" Value="White" />
+    </Style>
+
+
+    <!-- DataGrid标题栏样式 -->
+    <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="DataGridColumnHeaderStyle">
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="UseLayoutRounding" Value="True" />
+        <Setter Property="FontSize" Value="14" />
+        <Setter Property="Height" Value="38" />
+        <Setter Property="Foreground" Value="#333333" />
+        <Setter Property="BorderThickness" Value="0, 0, 0, 0" />
+        <Setter Property="Background">
+            <Setter.Value>
+                <LinearGradientBrush EndPoint=".5, 0" StartPoint=".5, 1" Opacity="1">
+                    <GradientStop Color="#FFECECEC" Offset="0.2" />
+                    <GradientStop Color="#FFFCFCFC" Offset="0.8" />
+                </LinearGradientBrush>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <!-- DataGrid隔行变色的项样式  -->
+    <Style TargetType="{x:Type DataGridRow}" x:Key="ConfigDataGridRowStyle" BasedOn="{StaticResource DataGridRowDefaultStyle}">
+        <Style.Triggers>
+            <Trigger Property="AlternationIndex" Value="0">
+                <Setter Property="Background" Value="#284b91" />
+            </Trigger>
+            <Trigger Property="AlternationIndex" Value="1">
+                <Setter Property="Background" Value="#284b91" />
+            </Trigger>
+        </Style.Triggers>
+    </Style>
+    <!-- 配置页面中DataGrid的Header样式 -->
+    <Style TargetType="{x:Type DataGridColumnHeader}" x:Key="ConfigDataGridColumnHeaderStyle" BasedOn="{StaticResource DataGridColumnHeaderStyle}">
+        <Setter Property="Background" Value="#284b91" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="FontWeight" Value="Bold"/>
+    </Style>
+
+
+
+    <!-- 配置页面中DataGrid的样式 -->
+    <Style TargetType="{x:Type DataGrid}" x:Key="ConfigDataGridStyle" BasedOn="{StaticResource DataGridDefaultStyle}">
+        <Setter Property="Background" Value="Transparent" />
+        <Setter Property="Foreground" Value="White" />
+        <Setter Property="BorderThickness" Value="0" />
+        <Setter Property="SelectionMode" Value="Extended" />
+        <Setter Property="AlternationCount" Value="2" />
+        <Setter Property="RowStyle" Value="{StaticResource ConfigDataGridRowStyle}" />
+        <Setter Property="ColumnHeaderStyle" Value="{StaticResource ConfigDataGridColumnHeaderStyle}" />
+        <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+    </Style>
+
+   
+    
+</ResourceDictionary>

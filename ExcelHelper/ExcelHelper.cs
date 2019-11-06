@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Aspose.Cells;
+using GradePackage;
 
 namespace ExcelUnity
 {
@@ -52,6 +51,29 @@ namespace ExcelUnity
             {
                 return false;
             }
+        }
+
+        public static IList<IList<object>> GetExcelFiles(string path)
+        {
+            try
+            {
+                DirectoryInfo directoryInfo = new DirectoryInfo(path);
+                foreach (var file in directoryInfo.GetFiles())
+                {
+                    var list = new List<ClassGradeEntity>();
+                    var rank = new RankGradeEntity();
+                    CalculationFromExcel(file.FullName, out var classGrade);
+                    rank.list.Add(classGrade);
+                    list.Add(classGrade);
+                    //return FromExcel(file.FullName);
+                }
+            }
+            catch(Exception e)
+            {
+
+            }
+
+            return null;
         }
 
         private static bool ToExcelPrivate(string name, string path, Action<Worksheet> action, bool isOpen)
@@ -102,7 +124,7 @@ namespace ExcelUnity
         /// <param name="fileName">文件名称</param>
         /// <param name="sheetName">sheet名称</param>
         /// <returns></returns>
-        public static IList<IList<object>> FromExcel(string fileName, string sheetName)
+        public static IList<IList<object>> FromExcel(string fileName, string sheetName = "Sheet1")
         {
             List<IList<object>> list = new List<IList<object>>();
             if (!File.Exists(fileName))
@@ -146,20 +168,48 @@ namespace ExcelUnity
 
         /// <summary>
         /// 直接用公式计算数据
+        /// 每个班的成绩
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="sheetName"></param>
-        public static void CalculationFromExcel(string fileName, string sheetName)
+        public static void CalculationFromExcel(string fileName, out ClassGradeEntity classGrade, string sheetName = "Sheet1")
         {
+            classGrade = new ClassGradeEntity()
+            {
+                Id = "1"
+            };
             if (!File.Exists(fileName))
                 return;
             try
             {
+                var workBook = new Workbook(fileName);
+                var workSheet = workBook.Worksheets[sheetName];
+                if (workSheet == null) return;
 
+                for(var c = 2; c <= workSheet.Cells.MaxColumn; c++)
+                {
+                    var start = workSheet.Cells[1, c].Name;
+                    var end = workSheet.Cells[workSheet.Cells.MaxRow, c].Name;
+                    var sumGradeformula = $"SUM({start}:{end})";
+                    var excellent = $"COUNTIFS({start}:{end},\">={GradeEnum.Grade.优秀}\")";
+                    var good = $"COUNTIFS({start}:{end},\">={GradeEnum.Grade.良好}\",{start}:{end},\"<{GradeEnum.Grade.优秀}\")";
+                    var pass = $"COUNTIFS({start}:{end},\">={GradeEnum.Grade.及格}\",{start}:{end},\"<{GradeEnum.Grade.良好}\")";
+                    var sub = new SubjectEntity
+                    {
+                        Id = Path.GetFileNameWithoutExtension(fileName),
+                        Name = workSheet.Cells[0, c].Value.ToString(),
+                        SumGrade = (double)workSheet.CalculateFormula(sumGradeformula),
+                        Sum = workSheet.Cells.MaxRow - 1,
+                        Excellent = (double)workSheet.CalculateFormula(excellent),
+                        Good = (double)workSheet.CalculateFormula(good),
+                        Pass =(double)workSheet.CalculateFormula(pass),
+                    };
+                    classGrade.SubjectList.Add(sub);
+                }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-
+                Console.WriteLine(e.Message);
             }
         }
     }

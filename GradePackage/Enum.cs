@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 // Copyright (C) 2017
 // 版权所有。 
 //
-// 文件名：ClassGradeEntity
+// 文件名：Enum
 // 文件功能描述：
 //
 // 创建者：名字 (Administrator)
-// 时间：2019/11/5 17:25:22
+// 时间：2019/11/5 17:33:06
 //
 // 修改人：
 // 时间：
@@ -25,15 +25,29 @@ using System.Threading.Tasks;
 
 namespace GradePackage
 {
-    public class ClassGradeEntity
+    public class GradeEnum
     {
-        public string Num { get; set; }
-        public int StuCount { get; set; }
-        public double Chinese { get; set; }
-        public double Math { get; set; }
-        public double English { get; set; }
-        public double Science { get; set; }
-        public double Average { get => (Summary / StuCount); }
-        public double Summary { get => (Chinese + Math + English + Science); }
+        public enum GradeRate
+        {
+            优秀率 = 30,
+            良好率 = 45,
+            及格率 = 50,
+            平均分率 = 35
+        }
+
+        public enum Grade
+        {
+            优秀=85,
+            良好=70,
+            及格=60
+        }
+
+        public enum SubjectName
+        {
+            语文,
+            数学,
+            英语,
+            科学
+        }
     }
 }

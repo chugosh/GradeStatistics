@@ -9,15 +9,15 @@ namespace GradePackage
     public static  class GradeHelper
     {
 
-        public static IList<GradeEntity> GetEntitiesByExcelDatas(IList<IList<object>> datas)
+        public static IList<StudentGradeEntity> GetEntitiesByExcelDatas(IList<IList<object>> datas)
         {
-            IList<GradeEntity> gradeEntities = new List<GradeEntity>();
+            IList<StudentGradeEntity> gradeEntities = new List<StudentGradeEntity>();
             for (int i = 1; i < datas.Count; i++)
             {
                 var score = datas[i];
-                var grade = new GradeEntity();
+                var grade = new StudentGradeEntity();
                 if (score[0] == null || string.IsNullOrEmpty(score[0].ToString())) continue;
-                else grade.Num = score[0].ToString();
+                else grade.Id = score[0].ToString();
 
                 if (score[1] == null || string.IsNullOrEmpty(score[1].ToString())) grade.Name = "未命名";
                 else grade.Name = score[1].ToString();

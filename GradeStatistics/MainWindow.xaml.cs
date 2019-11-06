@@ -1,6 +1,7 @@
 ﻿using ExcelUnity;
 using GradePackage;
 using Microsoft.Win32;
+using System.IO;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -14,11 +15,12 @@ namespace GradeStatistics
         public MainWindow()
         {
             InitializeComponent();
+            var datas = ExcelHelper.GetExcelFiles(@"G:\Test");
         }
 
         private void BtnFile_Click(object sender, RoutedEventArgs e)
         {
-
+            
             //OpenFileDialog fileDialog = new OpenFileDialog
             //{
             //    Filter = "Excel(*.xlsx)|*.xlsx;*.xls",
@@ -42,6 +44,7 @@ namespace GradeStatistics
             {
                 var path = folderBrowserDialog.SelectedPath;
                 tbFileName.Text = path;
+                var datas = ExcelHelper.GetExcelFiles(path);
                 //System.Windows.MessageBox.Show(path);
             }
         }

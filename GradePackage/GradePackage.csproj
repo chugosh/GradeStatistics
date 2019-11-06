@@ -39,8 +39,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClassGradeEntity.cs" />
-    <Compile Include="GradeEntity.cs" />
+    <Compile Include="Enum.cs" />
     <Compile Include="GradeHelper.cs" />
     <Compile Include="GradeRankEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

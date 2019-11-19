@@ -13,28 +13,30 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid>
+    <Grid Margin="0,0,2,8">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <TextBox Width="260" IsReadOnly="True" x:Name="tbFileName"></TextBox>
-            <Button Content="选择文件" Click="BtnFile_Click"></Button>
-            <Button Content="选择文件夹" Click="BtnFolder_Click"></Button>
+            <TextBox Width="400" IsReadOnly="True" x:Name="tbFileName" Margin="0,0,0,-42"></TextBox>
+            <Button Content="选择文件夹" Click="BtnFolder_Click" Margin="0,0,0,-42" Width="247"/>
         </StackPanel>
 
-        <DataGrid Grid.Row="1" ItemsSource="{Binding}" x:Name="m_dataGrid" Style="{StaticResource ConfigDataGridStyle}">
+        <!--<DataGrid Grid.Row="1" ItemsSource="{Binding}" x:Name="m_dataGrid" Style="{StaticResource ConfigDataGridStyle}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="学号" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Num}" Width="*" />
-                <DataGridTextColumn Header="姓名" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
-                <DataGridTextColumn Header="语文" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Chinese}" Width="*" />
-                <DataGridTextColumn Header="数学" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Math}" Width="*" />
-                <DataGridTextColumn Header="英语" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding English}" Width="*" />
-                <DataGridTextColumn Header="科学" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Science}" Width="*" />
-                <DataGridTextColumn Header="平均" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
-                <DataGridTextColumn Header="总分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Summary}" Width="*" />
+                <DataGridTextColumn Header="班级" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Id}" Width="*" />
+                <DataGridTextColumn Header="学生总数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Sum}" Width="*" />
+                <DataGridTextColumn Header="平均分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
+                <DataGridTextColumn Header="科目名称" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
+                <DataGridTextColumn Header="优秀人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Excellent}" Width="*" />
+                <DataGridTextColumn Header="优秀率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ExcellentRate}" Width="*" />
+                <DataGridTextColumn Header="良好人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Good}" Width="*" />
+                <DataGridTextColumn Header="良好率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding GoodRate}" Width="*" />
+                <DataGridTextColumn Header="及格人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Pass}" Width="*" />
+                <DataGridTextColumn Header="及格率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding PassRate}" Width="*" />
+                <DataGridTextColumn Header="标准分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding StandGrade}" Width="*" />
             </DataGrid.Columns>
-        </DataGrid>
+        </DataGrid>-->
     </Grid>
 </Window>

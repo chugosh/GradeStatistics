@@ -27,7 +27,7 @@ namespace GradePackage
 {
     public class GradeEnum
     {
-        public enum GradeRate
+        public enum GradeRate:int
         {
             优秀率 = 30,
             良好率 = 45,
@@ -35,7 +35,7 @@ namespace GradePackage
             平均分率 = 35
         }
 
-        public enum Grade
+        public enum Grade:int
         {
             优秀=85,
             良好=70,

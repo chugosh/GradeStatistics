@@ -51,8 +51,12 @@
   <ItemGroup>
     <Compile Include="ExcelHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Aid\License.lic">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
@@ -60,6 +64,9 @@
       <Project>{81191075-6b6b-4e60-85f1-052735d52d52}</Project>
       <Name>GradePackage</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Aid\Aspose.Cells.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,42 +5,50 @@ using System.Data;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Windows.Forms;
 using Aspose.Cells;
 using GradePackage;
+using Newtonsoft.Json;
 
 namespace ExcelUnity
 {
     public static class ExcelHelper
     {
+        public static Configs Rates;
+        public static object thisRate = new object();
+        private static int row = 3;
         static ExcelHelper()
         {
+            var cfg = Path.Combine(Application.StartupPath, "Config.json");
+            Rates = JsonConvert.DeserializeObject<Configs>(File.ReadAllText(cfg));
             //t.License l = new Excel.License();
             //l.SetLicense("Aid/License.lic");
         }
 
-        public static bool ToExcel<T>(string destPath, List<T> datas, string name, bool isOpen = false)
+        public static bool ToExcel<T>(string destPath, List<T> datas,string name, int rowNum, bool isOpen = false)
         {
             var dataTable = Utils.ToDataTable<T>(datas);
             return ToExcelPrivate(name, destPath, (Worksheet worksheet) =>
             {
-                //worksheet.Cells.ImportData(dataTable, worksheet.Cells.MaxRow + 1, 0, null);
                 for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
-                    var row = worksheet.Cells.MaxRow + 1;
+                    //var rowActive = 3 + i;
                     for (int j = 0; j < dataTable.Columns.Count; j++)
                     {
                         var s = dataTable.Rows[i][j];
-                        worksheet.Cells[row, j].PutValue(dataTable.Rows[i][j]);
+                        worksheet.Cells[rowNum, j].GetStyle().Font.Size = 11;
+                        var style = new CellsFactory().CreateStyle();
+                        style.Font.Size = 11;
+                        worksheet.Cells[rowNum, j].SetStyle(style);
+                        worksheet.Cells[rowNum, j].PutValue(dataTable.Rows[i][j]);
                     }
+                    rowNum++;
                 }
                 //((ExcelRangeBase)worksheet.Cells["A1"]).LoadFromArrays((IEnumerable<object[]>)datas.Select((IList<string> data) => data.ToArray()));
             }, isOpen);// ? dataTable : null;
         }
 
-        public static DataTable ExcelToDataTable(Cells cells)
-        {
-            return cells.ExportDataTable(3, 0, cells.MaxRow, cells.MaxColumn);
-        }
+        public static DataTable ExcelToDataTable(Cells cells) => cells.ExportDataTable(3, 0, cells.MaxRow, cells.MaxColumn);
 
         /// <summary>
         /// 返回所有年级的所有班级成绩 
@@ -57,13 +65,15 @@ namespace ExcelUnity
                 //file 每一个年级文件
                 foreach (var file in directoryInfo.GetFiles())
                 {
+                    if (file.Extension.Length <= 0) continue;
                     var id = CalculationFromExcel(file.FullName, out var classGrade);
                     var grade = new GradeEntity()
                     {
-                        Id = file.Name,
+                        Id = Path.GetFileNameWithoutExtension(file.FullName),
                     };
                     grade.ClassLists = classGrade;
                     gradeList.Add(grade);
+
                 }
                 //grade.ClassLists = class 
                 return gradeList;
@@ -79,14 +89,6 @@ namespace ExcelUnity
         {
             try
             {
-                //if (!path.EndsWith(".xlsx"))
-                //{
-                //    if (!Directory.Exists(path))
-                //    {
-                //        Directory.CreateDirectory(path);
-                //    }
-                //    path = $@"{path}\{name}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-                //}
                 if (!File.Exists(path))
                 {
                     FileStream fs1 = new FileStream(path, FileMode.Create, FileAccess.Write);//创建写入文件 
@@ -172,8 +174,9 @@ namespace ExcelUnity
         /// <param name="fileName">一个年级的表格</param>
         /// <param name="sheetName"></param>
         /// classGrade 一个年级所有班级list
-        public static string CalculationFromExcel(string fileName, out List<ClassEntity> classGrade, string sheetName = "Sheet1")
+        public static string CalculationFromExcel(string fileName,out List<ClassEntity> classGrade, string sheetName = "Sheet1")
         {
+            //GetGrides(fileName, out int excegride, out int goodgride, out int passgride);
             classGrade = new List<ClassEntity>();
             if (!File.Exists(fileName))
                 return string.Empty;
@@ -188,9 +191,8 @@ namespace ExcelUnity
                     for(var r = 1; r < workSheet.Cells.Rows.Count; r++)
                     {
                         //第一列list
-                        //取第七位
-                        var i = workSheet.Cells[r, 0].Value.ToString();
-                        var id = workSheet.Cells[r, 0].Value.ToString().Substring(6,1);
+                        //取第4位班级号
+                        var id = workSheet.Cells[r, 0].Value.ToString().Substring(3,1);
                         if(dic.TryGetValue(id, out _))
                             dic[id]++;
                         else
@@ -209,34 +211,29 @@ namespace ExcelUnity
                         double maxGoodRate = 0;
                         double maxPassRate = 0;
                         double maxAver = 0;
+                        //科目名称 根据科目名称查找优秀分及格分 根据总分计算及格率优秀率
                         var name = workSheet.Cells[0, c].Value.ToString();
+                        GetGrides(fileName, name, out int excegride, out int goodgride, out int passgride);
                         //所有班级一个科目的成绩
                         //每个key是一个班
                         foreach (var key in dic.Keys)
                         {
                             end += dic[key];
                             var endCell = workSheet.Cells[end, c].Name.ToString();// 
-                            
                             var sumGradeFormula = $"SUM({startCell}:{endCell})";
-                            var excellentFormula = $"COUNTIFS({startCell}:{endCell},\">={(int)GradeEnum.Grade.优秀}\")";
-                            var goodFormula = $"COUNTIFS({startCell}:{endCell},\">={(int)GradeEnum.Grade.良好}\",{startCell}:{endCell},\"<{(int)GradeEnum.Grade.优秀}\")";
-                            var passFormula = $"COUNTIFS({startCell}:{endCell},\">={(int)GradeEnum.Grade.及格}\",{startCell}:{endCell},\"<{(int)GradeEnum.Grade.良好}\")";
+                            var excellentFormula = $"COUNTIFS({startCell}:{endCell},\">={(excegride == 0 ? (int)GradeEnum.Grade.优秀 : excegride)}\")";
+                            var goodFormula = $"COUNTIFS({startCell}:{endCell},\">={(goodgride == 0 ? (int)GradeEnum.Grade.良好 : goodgride)}\")";
+                            var passFormula = $"COUNTIFS({startCell}:{endCell},\">={(passgride == 0 ? (int)GradeEnum.Grade.及格 : passgride)}\")";
 
-                            var e = (double)workSheet.CalculateFormula(excellentFormula);
-                            var g = (double)workSheet.CalculateFormula(goodFormula);
-                            var p = (double)workSheet.CalculateFormula(passFormula);
                             var sub = new SubjectEntity
                             {
                                 Id = key,
                                 Name = name,
                                 Sum = dic[key],
                                 SumGrade = (double)workSheet.CalculateFormula(sumGradeFormula),
-                                Excellent = e,
-                                Good = g,
-                                Pass = p,
-                                ExcellentRate = Math.Round(e / dic[key], 2),
-                                GoodRate = Math.Round(g / dic[key], 2),
-                                PassRate = Math.Round(p / dic[key], 2),
+                                Excellent = (double)workSheet.CalculateFormula(excellentFormula),
+                                Good = (double)workSheet.CalculateFormula(goodFormula),
+                                Pass = (double)workSheet.CalculateFormula(passFormula)
                             };
 
                             maxExcellentRate = maxExcellentRate > sub.ExcellentRate ? maxExcellentRate : sub.ExcellentRate;
@@ -250,12 +247,12 @@ namespace ExcelUnity
                         }
 
                         foreach(var g in classGrade)
-                        {
+                        { 
                             var sub = g.SubjectList.Where(s => s.Name == name).FirstOrDefault();
-                            sub.ExcellentRate /= Math.Round(maxExcellentRate, 2);
-                            sub.GoodRate /= Math.Round(maxGoodRate, 2);
-                            sub.PassRate /= Math.Round(maxPassRate, 2);
-                            sub.AverageRate = sub.Average / Math.Round(maxAver,2);
+                            sub.StandGrade = Math.Round(Math.Round(sub.ExcellentRate / (maxExcellentRate == 0 ? 1 : maxExcellentRate), 2) * (double)GradeEnum.GradeRate.优秀率
+                                        + Math.Round(sub.GoodRate / (maxGoodRate == 0 ? 1 : maxGoodRate), 2) * (double)GradeEnum.GradeRate.及格率
+                                        + Math.Round(sub.PassRate / (maxPassRate == 0 ? 1 : maxPassRate), 2) * (double)GradeEnum.GradeRate.良好率
+                                        + Math.Round(sub.Average / (maxAver == 0 ? 1 : maxAver), 2) * (double)GradeEnum.GradeRate.平均分率, 3);
                         }
                     }
                     return "";
@@ -268,40 +265,176 @@ namespace ExcelUnity
             }
         }
 
-        public static void OldWay(string filename)
+        /// <summary>
+        /// 获取各个年级的优秀分 及格分 良好分
+        /// 新改版的配置里需要获取每个年级每一科目的 todo
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="excegride"></param>
+        /// <param name="goodgride"></param>
+        /// <param name="passgride"></param>
+        private static void GetGrides(string fileName,string className, out int excegride, out int goodgride, out int passgride)
         {
-            //foreach (var key in dic.Keys)
-            //{
-            //    var ce = new ClassEntity() { Id=key, };
-            //    var end = dic[key];
-            //    for (var c = 2; c <= workSheet.Cells.MaxColumn; c++)
-            //    {
-            //        var sumGradeFormula = $"SUM({start}:{end})";
-            //        var excellentFormula = $"COUNTIFS({start}:{end},\">={(int)GradeEnum.Grade.优秀}\")";
-            //        var goodFormula = $"COUNTIFS({start}:{end},\">={(int)GradeEnum.Grade.良好}\",{start}:{end},\"<{(int)GradeEnum.Grade.优秀}\")";
-            //        var passFormula = $"COUNTIFS({start}:{end},\">={(int)GradeEnum.Grade.及格}\",{start}:{end},\"<{(int)GradeEnum.Grade.良好}\")";
-
-            //        var sub = new SubjectEntity
-            //        {
-            //            Id = Path.GetFileNameWithoutExtension(fileName),
-            //            Name = workSheet.Cells[0, c].Value.ToString(),
-            //            SumGrade = (double)workSheet.CalculateFormula(sumGradeFormula),
-            //            Sum = end,
-            //            Excellent = (double)workSheet.CalculateFormula(excellentFormula),
-            //            Good = (double)workSheet.CalculateFormula(goodFormula),
-            //            Pass = (double)workSheet.CalculateFormula(passFormula),
-            //        };
-
-            //        maxExcellentRate = maxExcellentRate > sub.ExcellentRate ? maxExcellentRate : sub.ExcellentRate;
-            //        maxGoodRate = maxGoodRate > sub.GoodRate ? maxGoodRate : sub.GoodRate;
-            //        maxPassRate = maxPassRate > sub.PassRate ? maxPassRate : sub.PassRate;
-            //        maxAver = maxAver > sub.Average ? maxPassRate : sub.Average;
-
-            //        ce.SubjectList.Add(sub);
-            //    }
-            //    classGrade.Add(ce);
-            //    start = end + 1;
-            //}
+            goodgride = 0;
+            excegride = 0;
+            passgride = 0;
+            var filename = Path.GetFileNameWithoutExtension(fileName);
+            if (filename.Equals("1年级") || filename.Equals("1") || filename.Equals("一年级"))
+            {
+                switch (className)
+                {
+                    case "语文":
+                        excegride = Rates.一年级.语文.优秀分;
+                        goodgride = Rates.一年级.语文.优良分;
+                        passgride = Rates.一年级.语文.及格分;
+                        break;
+                    case "数学":
+                        excegride = Rates.一年级.数学.优秀分;
+                        goodgride = Rates.一年级.数学.优良分;
+                        passgride = Rates.一年级.数学.及格分;
+                        break;
+                    case "英语":
+                        excegride = Rates.一年级.英语.优秀分;
+                        goodgride = Rates.一年级.英语.优良分;
+                        passgride = Rates.一年级.英语.及格分;
+                        break;
+                    case "科学":
+                        excegride = Rates.一年级.科学.优秀分;
+                        goodgride = Rates.一年级.科学.优良分;
+                        passgride = Rates.一年级.科学.及格分;
+                        break;
+                }
+            }
+            else if (filename.Equals("2年级") || filename.Equals("2") || filename.Equals("二年级"))
+            {
+                switch (className)
+                {
+                    case "语文":
+                        excegride = Rates.二年级.语文.优秀分;
+                        goodgride = Rates.二年级.语文.优良分;
+                        passgride = Rates.二年级.语文.及格分;
+                        break;
+                    case "数学":
+                        excegride = Rates.二年级.数学.优秀分;
+                        goodgride = Rates.二年级.数学.优良分;
+                        passgride = Rates.二年级.数学.及格分;
+                        break;
+                    case "英语":
+                        excegride = Rates.二年级.英语.优秀分;
+                        goodgride = Rates.二年级.英语.优良分;
+                        passgride = Rates.二年级.英语.及格分;
+                        break;
+                    case "科学":
+                        excegride = Rates.二年级.科学.优秀分;
+                        goodgride = Rates.二年级.科学.优良分;
+                        passgride = Rates.二年级.科学.及格分;
+                        break;
+                }
+            }
+            else if (filename.Equals("3年级") || filename.Equals("3") || filename.Equals("三年级"))
+            {
+                switch (className)
+                {
+                    case "语文":
+                        excegride = Rates.三年级.语文.优秀分;
+                        goodgride = Rates.三年级.语文.优良分;
+                        passgride = Rates.三年级.语文.及格分;
+                        break;
+                    case "数学":
+                        excegride = Rates.三年级.数学.优秀分;
+                        goodgride = Rates.三年级.数学.优良分;
+                        passgride = Rates.三年级.数学.及格分;
+                        break;
+                    case "英语":
+                        excegride = Rates.三年级.英语.优秀分;
+                        goodgride = Rates.三年级.英语.优良分;
+                        passgride = Rates.三年级.英语.及格分;
+                        break;
+                    case "科学":
+                        excegride = Rates.三年级.科学.优秀分;
+                        goodgride = Rates.三年级.科学.优良分;
+                        passgride = Rates.三年级.科学.及格分;
+                        break;
+                }
+            }
+            else if (filename.Equals("4年级") || filename.Equals("4") || filename.Equals("四年级"))
+            {
+                switch (className)
+                {
+                    case "语文":
+                        excegride = Rates.四年级.语文.优秀分;
+                        goodgride = Rates.四年级.语文.优良分;
+                        passgride = Rates.四年级.语文.及格分;
+                        break;
+                    case "数学":
+                        excegride = Rates.四年级.数学.优秀分;
+                        goodgride = Rates.四年级.数学.优良分;
+                        passgride = Rates.四年级.数学.及格分;
+                        break;
+                    case "英语":
+                        excegride = Rates.四年级.英语.优秀分;
+                        goodgride = Rates.四年级.英语.优良分;
+                        passgride = Rates.四年级.英语.及格分;
+                        break;
+                    case "科学":
+                        excegride = Rates.四年级.科学.优秀分;
+                        goodgride = Rates.四年级.科学.优良分;
+                        passgride = Rates.四年级.科学.及格分;
+                        break;
+                }
+            }
+            else if (filename.Equals("5年级") || filename.Equals("5") || filename.Equals("五年级"))
+            {
+                switch (className)
+                {
+                    case "语文":
+                        excegride = Rates.五年级.语文.优秀分;
+                        goodgride = Rates.五年级.语文.优良分;
+                        passgride = Rates.五年级.语文.及格分;
+                        break;
+                    case "数学":
+                        excegride = Rates.五年级.数学.优秀分;
+                        goodgride = Rates.五年级.数学.优良分;
+                        passgride = Rates.五年级.数学.及格分;
+                        break;
+                    case "英语":
+                        excegride = Rates.五年级.英语.优秀分;
+                        goodgride = Rates.五年级.英语.优良分;
+                        passgride = Rates.五年级.英语.及格分;
+                        break;
+                    case "科学":
+                        excegride = Rates.五年级.科学.优秀分;
+                        goodgride = Rates.五年级.科学.优良分;
+                        passgride = Rates.五年级.科学.及格分;
+                        break;
+                }
+            }
+            else if (filename.Equals("6年级") || filename.Equals("6") || filename.Equals("六年级"))
+            {
+                switch (className)
+                {
+                    case "语文":
+                        excegride = Rates.六年级.语文.优秀分;
+                        goodgride = Rates.六年级.语文.优良分;
+                        passgride = Rates.六年级.语文.及格分;
+                        break;
+                    case "数学":
+                        excegride = Rates.六年级.数学.优秀分;
+                        goodgride = Rates.六年级.数学.优良分;
+                        passgride = Rates.六年级.数学.及格分;
+                        break;
+                    case "英语":
+                        excegride = Rates.六年级.英语.优秀分;
+                        goodgride = Rates.六年级.英语.优良分;
+                        passgride = Rates.六年级.英语.及格分;
+                        break;
+                    case "科学":
+                        excegride = Rates.六年级.科学.优秀分;
+                        goodgride = Rates.六年级.科学.优良分;
+                        passgride = Rates.六年级.科学.及格分;
+                        break;
+                }
+            }
         }
 
     }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GradeStatistics"
         mc:Ignorable="d"
-        Title="成绩统计" Height="450" Width="800" >
+        Title="成绩统计" Height="450" Width="800" Background="AliceBlue">
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
@@ -13,30 +13,125 @@
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
-    <Grid Margin="0,0,2,8">
+    <Grid Margin="0,0,2,8" >
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <StackPanel Orientation="Horizontal" Grid.Row="0">
-            <TextBox Width="400" IsReadOnly="True" x:Name="tbFileName" Margin="0,0,0,-42"></TextBox>
-            <Button Content="选择文件夹" Click="BtnFolder_Click" Margin="0,0,0,-42" Width="247"/>
+        <StackPanel Orientation="Horizontal" Margin="20,20,20,45" >
+            <TextBox Width="218" IsReadOnly="True" x:Name="tbFileName" Margin="50,0,0,-32" TextAlignment="Center"/>
+            <Button Content="选择文件夹" Click="BtnFolder_Click" Margin="0,0,0,-32" Width="89"/>
         </StackPanel>
+        <TabControl Grid.Row="1" x:Name="tabControl" TabStripPlacement="Top">
+            <TabItem Header="一年级" x:Name="tabitms1">
+                <DataGrid Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding}" x:Name="m_dataGrid" Style="{StaticResource ConfigDataGridStyle}" HorizontalScrollBarVisibility="Visible" Width="800" Height="325" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="科目名称" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="班级排名" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ClassSort}" Width="*" />
+                        <DataGridTextColumn Header="班级" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Id}" Width="*" />
+                        <DataGridTextColumn Header="学生总数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Sum}" Width="*" />
+                        <DataGridTextColumn Header="平均分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
+                        <DataGridTextColumn Header="优秀人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Excellent}" Width="*" />
+                        <DataGridTextColumn Header="优秀率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ExcellentRate}" Width="*" />
+                        <DataGridTextColumn Header="良好人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Good}" Width="*" />
+                        <DataGridTextColumn Header="良好率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding GoodRate}" Width="*" />
+                        <DataGridTextColumn Header="及格人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Pass}" Width="*" />
+                        <DataGridTextColumn Header="及格率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding PassRate}" Width="*" />
+                        <DataGridTextColumn Header="标准分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding StandGrade}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="二年级">
+                <DataGrid Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding}" x:Name="m_dataGrid2" Style="{StaticResource ConfigDataGridStyle}" HorizontalScrollBarVisibility="Visible" Width="800" Height="325" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="科目名称" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="班级排名" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ClassSort}" Width="*" />
+                        <DataGridTextColumn Header="班级" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Id}" Width="*" />
+                        <DataGridTextColumn Header="学生总数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Sum}" Width="*" />
+                        <DataGridTextColumn Header="平均分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
+                        <DataGridTextColumn Header="优秀人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Excellent}" Width="*" />
+                        <DataGridTextColumn Header="优秀率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ExcellentRate}" Width="*" />
+                        <DataGridTextColumn Header="良好人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Good}" Width="*" />
+                        <DataGridTextColumn Header="良好率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding GoodRate}" Width="*" />
+                        <DataGridTextColumn Header="及格人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Pass}" Width="*" />
+                        <DataGridTextColumn Header="及格率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding PassRate}" Width="*" />
+                        <DataGridTextColumn Header="标准分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding StandGrade}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="三年级">
+                <DataGrid Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding}" x:Name="m_dataGrid3" Style="{StaticResource ConfigDataGridStyle}" HorizontalScrollBarVisibility="Visible" Width="800" Height="325" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="科目名称" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="班级排名" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ClassSort}" Width="*" />
+                        <DataGridTextColumn Header="班级" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Id}" Width="*" />
+                        <DataGridTextColumn Header="学生总数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Sum}" Width="*" />
+                        <DataGridTextColumn Header="平均分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
+                        <DataGridTextColumn Header="优秀人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Excellent}" Width="*" />
+                        <DataGridTextColumn Header="优秀率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ExcellentRate}" Width="*" />
+                        <DataGridTextColumn Header="良好人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Good}" Width="*" />
+                        <DataGridTextColumn Header="良好率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding GoodRate}" Width="*" />
+                        <DataGridTextColumn Header="及格人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Pass}" Width="*" />
+                        <DataGridTextColumn Header="及格率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding PassRate}" Width="*" />
+                        <DataGridTextColumn Header="标准分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding StandGrade}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="四年级">
+                <DataGrid Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding}" x:Name="m_dataGrid4" Style="{StaticResource ConfigDataGridStyle}" HorizontalScrollBarVisibility="Visible" Width="800" Height="325" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="科目名称" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="班级排名" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ClassSort}" Width="*" />
+                        <DataGridTextColumn Header="班级" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Id}" Width="*" />
+                        <DataGridTextColumn Header="学生总数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Sum}" Width="*" />
+                        <DataGridTextColumn Header="平均分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
+                        <DataGridTextColumn Header="优秀人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Excellent}" Width="*" />
+                        <DataGridTextColumn Header="优秀率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ExcellentRate}" Width="*" />
+                        <DataGridTextColumn Header="良好人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Good}" Width="*" />
+                        <DataGridTextColumn Header="良好率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding GoodRate}" Width="*" />
+                        <DataGridTextColumn Header="及格人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Pass}" Width="*" />
+                        <DataGridTextColumn Header="及格率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding PassRate}" Width="*" />
+                        <DataGridTextColumn Header="标准分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding StandGrade}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="五年级">
+                <DataGrid Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding}" x:Name="m_dataGrid5" Style="{StaticResource ConfigDataGridStyle}" HorizontalScrollBarVisibility="Visible" Width="800" Height="325" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="科目名称" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="班级排名" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ClassSort}" Width="*" />
+                        <DataGridTextColumn Header="班级" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Id}" Width="*" />
+                        <DataGridTextColumn Header="学生总数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Sum}" Width="*" />
+                        <DataGridTextColumn Header="平均分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
+                        <DataGridTextColumn Header="优秀人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Excellent}" Width="*" />
+                        <DataGridTextColumn Header="优秀率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ExcellentRate}" Width="*" />
+                        <DataGridTextColumn Header="良好人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Good}" Width="*" />
+                        <DataGridTextColumn Header="良好率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding GoodRate}" Width="*" />
+                        <DataGridTextColumn Header="及格人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Pass}" Width="*" />
+                        <DataGridTextColumn Header="及格率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding PassRate}" Width="*" />
+                        <DataGridTextColumn Header="标准分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding StandGrade}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="六年级">
+                <DataGrid Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Visible" ItemsSource="{Binding}" x:Name="m_dataGrid6" Style="{StaticResource ConfigDataGridStyle}" HorizontalScrollBarVisibility="Visible" Width="800" Height="325" >
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="科目名称" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
+                        <DataGridTextColumn Header="班级排名" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ClassSort}" Width="*" />
+                        <DataGridTextColumn Header="班级" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Id}" Width="*" />
+                        <DataGridTextColumn Header="学生总数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Sum}" Width="*" />
+                        <DataGridTextColumn Header="平均分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
+                        <DataGridTextColumn Header="优秀人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Excellent}" Width="*" />
+                        <DataGridTextColumn Header="优秀率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ExcellentRate}" Width="*" />
+                        <DataGridTextColumn Header="良好人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Good}" Width="*" />
+                        <DataGridTextColumn Header="良好率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding GoodRate}" Width="*" />
+                        <DataGridTextColumn Header="及格人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Pass}" Width="*" />
+                        <DataGridTextColumn Header="及格率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding PassRate}" Width="*" />
+                        <DataGridTextColumn Header="标准分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding StandGrade}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+        </TabControl>
 
-        <!--<DataGrid Grid.Row="1" ItemsSource="{Binding}" x:Name="m_dataGrid" Style="{StaticResource ConfigDataGridStyle}">
-            <DataGrid.Columns>
-                <DataGridTextColumn Header="班级" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Id}" Width="*" />
-                <DataGridTextColumn Header="学生总数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Sum}" Width="*" />
-                <DataGridTextColumn Header="平均分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Average}" Width="*" />
-                <DataGridTextColumn Header="科目名称" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Name}" Width="*" />
-                <DataGridTextColumn Header="优秀人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Excellent}" Width="*" />
-                <DataGridTextColumn Header="优秀率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding ExcellentRate}" Width="*" />
-                <DataGridTextColumn Header="良好人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Good}" Width="*" />
-                <DataGridTextColumn Header="良好率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding GoodRate}" Width="*" />
-                <DataGridTextColumn Header="及格人数" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding Pass}" Width="*" />
-                <DataGridTextColumn Header="及格率" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding PassRate}" Width="*" />
-                <DataGridTextColumn Header="标准分" HeaderStyle="{StaticResource ConfigDataGridColumnHeaderStyle}" ElementStyle="{StaticResource DataGridTextColumnStyle}" Binding="{Binding StandGrade}" Width="*" />
-            </DataGrid.Columns>
-        </DataGrid>-->
     </Grid>
 </Window>

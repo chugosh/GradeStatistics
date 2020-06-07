@@ -70,22 +70,22 @@ namespace GradePackage
             {
                 case GradeEnum.SubjectName.数学:
                     var list1 = new List<SubjectEntity>();
-                    datas.ClassLists.ForEach(c => list1.Add(c.SubjectList.Where(s => s.Name.Equals(name.ToString())).FirstOrDefault() ));
+                    datas.ClassLists.ForEach(c => list1.Add(c.SubjectList.Where(s => s.Name.Trim().Equals(name.ToString())).FirstOrDefault() ?? new SubjectEntity() { Name = name.ToString() }));
                     rank.RankDict.Add(name.ToString(), list1);
                     break;
                 case GradeEnum.SubjectName.语文:
                     var list2 = new List<SubjectEntity>();
-                    datas.ClassLists.ForEach(c => list2.Add(c.SubjectList.Where(s => s.Name.Equals(name.ToString())).FirstOrDefault()));
+                    datas.ClassLists.ForEach(c => list2.Add(c.SubjectList.Where(s => s.Name.Trim().Equals(name.ToString())).FirstOrDefault() ?? new SubjectEntity() { Name = name.ToString() }));
                     rank.RankDict.Add(name.ToString(), list2);
                     break;
                 case GradeEnum.SubjectName.英语:
                     var list3 = new List<SubjectEntity>();
-                    datas.ClassLists.ForEach(c => list3.Add(c.SubjectList.Where(s => s.Name.Equals(name.ToString())).FirstOrDefault()));
+                    datas.ClassLists.ForEach(c => list3.Add(c.SubjectList.Where(s => s.Name.Trim().Equals(name.ToString())).FirstOrDefault() ?? new SubjectEntity() { Name = name.ToString() }));
                     rank.RankDict.Add(name.ToString(), list3);
                     break;
                 case GradeEnum.SubjectName.科学:
                     var list4 = new List<SubjectEntity>();
-                    datas.ClassLists.ForEach(c => list4.Add(c.SubjectList.Where(s => s.Name.Equals(name.ToString())).FirstOrDefault()));// ?? new SubjectEntity() { Name = name.ToString() }
+                    datas.ClassLists.ForEach(c => list4.Add(c.SubjectList.Where(s => s.Name.Trim().Equals(name.ToString())).FirstOrDefault() ?? new SubjectEntity() { Name = name.ToString() }));// ?? new SubjectEntity() { Name = name.ToString() }
                     rank.RankDict.Add(name.ToString(), list4);
                     break;
             }

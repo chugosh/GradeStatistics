@@ -87,6 +87,10 @@ namespace GradePackage
         /// </summary>
         public string Name { get; set; }
         /// <summary>
+        /// 排序
+        /// </summary>
+        public int ClassSort { get; set; }
+        /// <summary>
         /// 班级id
         /// </summary>
         public string Id { get; set; }
@@ -105,7 +109,7 @@ namespace GradePackage
         /// <summary>
         /// 平均率:平均分 / 最大平均分
         /// </summary>
-        public double AverageRate { get; set; }
+        //public double AverageRate;
         /// <summary>
         /// 优秀人数
         /// </summary>
@@ -113,18 +117,15 @@ namespace GradePackage
         /// <summary>
         /// 优秀率
         /// </summary>
-        public double ExcellentRate { get; set; }
+        public double ExcellentRate { get => Math.Round(Excellent / Sum, 2); }
         public double Good { get; set; }
-        public double GoodRate { get; set; }
+        public double GoodRate { get => Math.Round(Good / Sum, 2); }
         public double Pass { get; set; }
-        public double PassRate { get; set; }
+        public double PassRate { get => Math.Round(Pass / Sum, 2); }
         /// <summary>
         /// 标准分 = (优秀人数 / 总人数) * 分数 + 良好率 * 分数 + 及格率 * 分数
         /// </summary>
-        public double StandGrade { get => Math.Round(ExcellentRate * (double)GradeEnum.GradeRate.优秀率 
-                                        + GoodRate * (double)GradeEnum.GradeRate.及格率 
-                                        + PassRate * (double)GradeEnum.GradeRate.良好率 
-                                        + AverageRate * (double)GradeEnum.GradeRate.平均分率, 3); }
+        public double StandGrade { get; set; }
     }
 
     /// <summary>

@@ -20,25 +20,6 @@ namespace GradeStatistics
             InitializeComponent();
         }
 
-        private void BtnFile_Click(object sender, RoutedEventArgs e)
-        {
-            
-            //OpenFileDialog fileDialog = new OpenFileDialog
-            //{
-            //    Filter = "Excel(*.xlsx)|*.xlsx;*.xls",
-            //    RestoreDirectory = true,
-            //};
-
-            //if(fileDialog.ShowDialog() == true)
-            //{
-            //    tbFileName.Text = fileDialog.FileName;
-            //    var datas = ExcelHelper.FromExcel(fileDialog.FileName, "Sheet1");
-            //    datas.RemoveAt(0);
-            //    var gradeEntities = GradeHelper.GetEntitiesByExcelDatas(datas);
-            //    m_dataGrid.ItemsSource = gradeEntities;
-            //}
-        }
-
         private void BtnFolder_Click(object sender, RoutedEventArgs e)
         {
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
@@ -52,24 +33,51 @@ namespace GradeStatistics
                 {
                     var rankGrade = new RankGradeEntity();
                     var allList = new List<SubjectEntity>();
-                    var sourcePath = Path.Combine(System.Windows.Forms.Application.StartupPath, "Result.xlsx");
-                    var destPath = $@"{path}\{d.Id}年级_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
-                    File.Copy(sourcePath, destPath, true);
+                    var sourceFile = Path.Combine(System.Windows.Forms.Application.StartupPath, "Result.xlsx");
+                    var destPath = $@"{path}\Result";
+                    var destFile = $@"{destPath}\{d.Id}_{DateTime.Now:yyyyMMdd_HHmmss}.xlsx";
+                    if (!Directory.Exists(destPath))
+                        Directory.CreateDirectory(destPath);
+                    File.Copy(sourceFile, destFile, true);
+                    
                     foreach (GradeEnum.SubjectName n in Enum.GetValues(typeof(GradeEnum.SubjectName)))
                     {
-                        GradeHelper.GetEntitiesByExcelDatas(d, ref rankGrade, n);
+                        GradeHelper.GetEntitiesByExcelDatas(d, ref rankGrade, n); 
                         //每一科目list写入excel
                         //TODO
                         rankGrade.RankDict.TryGetValue(n.ToString(), out List<SubjectEntity> list);
-                        ExcelHelper.ToExcel<SubjectEntity>(destPath, list.OrderByDescending(l => l.StandGrade).ToList(), "result");
-                        list.ForEach(l => allList.Add(l));
+                        var sort = 1;
+                        var sortList = list.OrderByDescending(l => l.StandGrade).ToList();
+                        sortList.ForEach(s => s.ClassSort = sort++);
+                        allList = allList.Concat(sortList).ToList();
+                        //ExcelHelper.ToExcel(destFile, sortList, "result");
+                        //list.OrderByDescending(l => l.StandGrade).ToList().ForEach(l => allList.Add(l));
                     }
-                    System.Windows.MessageBox.Show("导入完毕");
+                    ExcelHelper.ToExcel(destFile, allList, "result", 3);
+                    //
+                    BindsList(d, allList);
                     //rankGrade.RankDict.TryGetValue("数学", out List<SubjectEntity> list);
                     //m_dataGrid.ItemsSource = allList;
                     //ExcelHelper.ToExcel();
                 }
             }
+            System.Windows.MessageBox.Show("计算完毕并保存文件成功");
+        }
+
+        private void BindsList(GradeEntity d, List<SubjectEntity> allList)
+        {
+            if (d.Id.Equals("1年级") || d.Id.Equals("1") || d.Id.Equals("一年级"))
+                m_dataGrid.ItemsSource = allList;
+            else if (d.Id.Equals("2年级") || d.Id.Equals("2") || d.Id.Equals("二年级"))
+                m_dataGrid2.ItemsSource = allList;
+            else if (d.Id.Equals("3年级") || d.Id.Equals("3") || d.Id.Equals("三年级"))
+                m_dataGrid3.ItemsSource = allList;
+            else if (d.Id.Equals("4年级") || d.Id.Equals("4") || d.Id.Equals("四年级"))
+                m_dataGrid4.ItemsSource = allList;
+            else if (d.Id.Equals("5年级") || d.Id.Equals("5") || d.Id.Equals("五年级"))
+                m_dataGrid5.ItemsSource = allList;
+            else if (d.Id.Equals("6年级") || d.Id.Equals("6") || d.Id.Equals("六年级"))
+                m_dataGrid6.ItemsSource = allList;
         }
     }
 }
